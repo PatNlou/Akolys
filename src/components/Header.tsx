@@ -76,7 +76,7 @@ const Header = () => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-slate-600 hover:text-indigo-600 font-medium py-2"
+                  className="text-slate-600 hover:text-indigo-600 font-medium py-3 border-b border-slate-50 last:border-none"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.name}

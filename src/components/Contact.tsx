@@ -64,7 +64,7 @@ const Contact = () => {
               </div>
             </div>
 
-            <form className="space-y-6 bg-slate-50 p-8 rounded-2xl shadow-sm border border-slate-100">
+            <form className="space-y-6 bg-slate-50 p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">Nom</label>
