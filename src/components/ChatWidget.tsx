@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Loader2 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,10 +31,7 @@ const ChatWidget = () => {
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const model = ai.models.getGenerativeModel({
-        model: "gemini-2.5-flash-latest",
-        systemInstruction: `Tu es l'assistant virtuel d'Akolys Technologies. Tu dois répondre aux questions des visiteurs en te basant UNIQUEMENT sur les informations suivantes. Si la réponse n'est pas dans ces informations, invite poliment l'utilisateur à nous contacter directement.
+      const systemInstruction = `Tu es l'assistant virtuel d'Akolys Technologies. Tu dois répondre aux questions des visiteurs en te basant UNIQUEMENT sur les informations suivantes. Si la réponse n'est pas dans ces informations, invite poliment l'utilisateur à nous contacter directement.
 
         INFORMATIONS SUR AKOLYS :
         - Nom : Akolys Technologies (fondée en 2009 par Epee Gervais, ingénieur élec).
@@ -65,20 +61,36 @@ const ChatWidget = () => {
         - Email : contact@akolys.com
         - Horaires : Lun - Ven : 9h - 18h
 
-        Ton ton doit être professionnel, courtois et serviable. Sois concis.`,
+        Ton ton doit être professionnel, courtois et serviable. Sois concis.`;
+
+      const response = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: systemInstruction },
+            ...messages.map(m => ({
+              role: m.isUser ? 'user' : 'assistant',
+              content: m.text,
+            })),
+            { role: 'user', content: userMessage },
+          ],
+          stream: false,
+        }),
       });
 
-      const chat = model.startChat({
-        history: messages.map(m => ({
-          role: m.isUser ? "user" : "model",
-          parts: [{ text: m.text }],
-        })),
-      });
+      if (!response.ok) {
+        throw new Error(`DeepSeek API error: ${response.statusText}`);
+      }
 
-      const result = await chat.sendMessage(userMessage);
-      const response = result.response.text();
+      const data = await response.json();
+      const aiResponse = data.choices[0].message.content;
 
-      setMessages((prev) => [...prev, { text: response, isUser: false }]);
+      setMessages((prev) => [...prev, { text: aiResponse, isUser: false }]);
     } catch (error) {
       console.error("Erreur AI:", error);
       setMessages((prev) => [
