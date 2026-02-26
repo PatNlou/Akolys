@@ -22,11 +22,11 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 tracking-tight">
             Construire l'Avenir <br />
             <span className="text-indigo-400">Ensemble</span>
           </h1>
-          <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg md:text-2xl text-slate-300 mb-6 md:mb-8 max-w-2xl mx-auto">
             Akolys vous accompagne dans vos projets de construction et d'aménagement avec expertise et innovation.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

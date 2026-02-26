@@ -13,7 +13,7 @@ const Expertise = () => {
   ];
 
   return (
-    <section id="expertise" className="py-24 bg-white">
+    <section id="expertise" className="py-16 md:py-24 bg-white overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
           <motion.div

@@ -16,7 +16,7 @@ import ChatWidget from './components/ChatWidget';
 
 export default function App() {
   return (
-    <div className="font-sans text-slate-900 bg-white">
+    <div className="font-sans text-slate-900 bg-white overflow-x-hidden w-full">
       <Header />
       <Hero />
       <History />

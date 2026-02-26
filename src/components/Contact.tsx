@@ -4,28 +4,28 @@ import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 const Contact = () => {
   return (
-    <section id="contact" className="py-24 bg-white">
+    <section id="contact" className="py-16 md:py-24 bg-white overflow-hidden">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">Contactez-nous</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Contactez-nous</h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Vous avez un projet ? Discutons-en. Notre équipe est à votre écoute pour répondre à toutes vos questions.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           {/* Contact Info & Form */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
               <div className="flex items-start gap-4">
                 <div className="bg-indigo-100 p-3 rounded-lg text-indigo-600">
                   <MapPin size={24} />
@@ -117,7 +117,7 @@ const Contact = () => {
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="h-full min-h-[400px] rounded-2xl overflow-hidden shadow-lg border border-slate-200 relative"
+            className="h-full min-h-[300px] md:min-h-[400px] rounded-2xl overflow-hidden shadow-lg border border-slate-200 relative"
           >
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2783.596024694356!2d4.833175376676756!3d45.75932897108034!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f4ea516ae88797%3A0x408ab2ae4bb21f0!2sLyon!5e0!3m2!1sen!2sfr!4v1695123456789!5m2!1sen!2sfr"

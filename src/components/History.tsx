@@ -25,7 +25,7 @@ const History = () => {
   ];
 
   return (
-    <section id="history" className="py-24 bg-slate-50 relative overflow-hidden">
+    <section id="history" className="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-64 h-64 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>

@@ -82,6 +82,13 @@ const Header = () => {
                   {item.name}
                 </a>
               ))}
+              <a
+                href="#contact"
+                className="bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition-colors text-center mt-2"
+                onClick={() => setIsOpen(false)}
+              >
+                Nous Contacter
+              </a>
             </nav>
           </motion.div>
         )}
