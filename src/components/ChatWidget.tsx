@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageSquare, X, Send, Loader2 } from 'lucide-react';
+import { MessageSquare, X, Send } from 'lucide-react';
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
-    { text: "Bonjour ! Je suis l'assistant virtuel d'Akolys. Comment puis-je vous aider à propos de nos services ou de notre histoire ?", isUser: false },
+    { text: "Bonjour ! Comment pouvons-nous vous aider aujourd'hui ?", isUser: false },
   ]);
   const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const toggleChat = () => setIsOpen(!isOpen);
@@ -19,87 +18,24 @@ const ChatWidget = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isLoading]);
+  }, [messages]);
 
-  const handleSendMessage = async (e: React.FormEvent) => {
+  const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim() || isLoading) return;
+    if (!inputValue.trim()) return;
 
+    // Add user message
+    setMessages((prev) => [...prev, { text: inputValue, isUser: true }]);
     const userMessage = inputValue;
     setInputValue("");
-    setMessages((prev) => [...prev, { text: userMessage, isUser: true }]);
-    setIsLoading(true);
 
-    try {
-      const systemInstruction = `Tu es l'assistant virtuel d'Akolys Technologies. Tu dois répondre aux questions des visiteurs en te basant UNIQUEMENT sur les informations suivantes. Si la réponse n'est pas dans ces informations, invite poliment l'utilisateur à nous contacter directement.
-
-        INFORMATIONS SUR AKOLYS :
-        - Nom : Akolys Technologies (fondée en 2009 par Epee Gervais, ingénieur élec).
-        - Mission : Solutions techniques fiables, innovantes et durables pour projets industriels.
-        - Expertise : +15 ans d'expérience. Excellence technique, efficacité opérationnelle, responsabilité environnementale.
-        - Secteurs : Énergie (solaire, thermique, nucléaire), Chimie, Pharmaceutique, Offshore, Mines, Transport urbain.
-        
-        SERVICES :
-        - Construction (résidentiel/commercial haute qualité)
-        - Rénovation (transformation/modernisation)
-        - Architecture (conception innovante)
-        - Gestion de Projet (coordination complète)
-        - Consulting (immobilier/durable)
-        - Partenariats (artisans/fournisseurs)
-
-        PROJETS RÉCENTS :
-        - Centrale Solaire Photovoltaïque (Énergie)
-        - Unité de Production Pharmaceutique (Pharmaceutique)
-        - Plateforme Offshore (Offshore)
-        - Extension de Ligne de Tramway (Transport Urbain)
-        - Usine Chimique (Chimie)
-        - Complexe Minier (Mines)
-
-        CONTACT :
-        - Adresse : 123 Rue de la République, 69002 Lyon, France
-        - Téléphone : +33 4 72 00 00 00
-        - Email : contact@akolys.com
-        - Horaires : Lun - Ven : 9h - 18h
-
-        Ton ton doit être professionnel, courtois et serviable. Sois concis.`;
-
-      const response = await fetch('https://api.deepseek.com/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [
-            { role: 'system', content: systemInstruction },
-            ...messages.map(m => ({
-              role: m.isUser ? 'user' : 'assistant',
-              content: m.text,
-            })),
-            { role: 'user', content: userMessage },
-          ],
-          stream: false,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`DeepSeek API error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      const aiResponse = data.choices[0].message.content;
-
-      setMessages((prev) => [...prev, { text: aiResponse, isUser: false }]);
-    } catch (error) {
-      console.error("Erreur AI:", error);
+    // Simulate bot response
+    setTimeout(() => {
       setMessages((prev) => [
         ...prev,
-        { text: "Désolé, je rencontre des difficultés techniques pour le moment. Veuillez nous contacter par téléphone ou email.", isUser: false },
+        { text: "Merci pour votre message. Un membre de notre équipe vous répondra dans les plus brefs délais.", isUser: false },
       ]);
-    } finally {
-      setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (
@@ -116,7 +52,7 @@ const ChatWidget = () => {
             <div className="bg-indigo-600 p-4 flex justify-between items-center text-white">
               <div>
                 <h3 className="font-bold">Chat Akolys</h3>
-                <p className="text-xs text-indigo-200">Assistant IA en ligne</p>
+                <p className="text-xs text-indigo-200">En ligne</p>
               </div>
               <button onClick={toggleChat} className="hover:bg-indigo-700 p-1 rounded-full transition-colors">
                 <X size={20} />
@@ -141,14 +77,6 @@ const ChatWidget = () => {
                   </div>
                 </div>
               ))}
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-white p-3 rounded-2xl rounded-bl-none shadow-sm border border-slate-100 flex items-center gap-2">
-                    <Loader2 size={16} className="animate-spin text-indigo-600" />
-                    <span className="text-xs text-slate-500">En train d'écrire...</span>
-                  </div>
-                </div>
-              )}
               <div ref={messagesEndRef} />
             </div>
 
@@ -160,12 +88,11 @@ const ChatWidget = () => {
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Votre message..."
                 className="flex-1 px-4 py-2 rounded-full border border-slate-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm"
-                disabled={isLoading}
               />
               <button
                 type="submit"
-                className="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={!inputValue.trim() || isLoading}
+                className="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors flex items-center justify-center"
+                disabled={!inputValue.trim()}
               >
                 <Send size={18} />
               </button>
